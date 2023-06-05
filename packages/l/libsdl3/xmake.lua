@@ -9,7 +9,7 @@ package("libsdl3")
 
     add_deps("cmake")
 
-    add_includedirs("include", "include/SDL3")
+    add_includedirs("include", "include")
 
     add_configs("use_sdlmain", {description = "Use SDL_main entry point", default = true, type = "boolean"})
     if is_plat("linux") then

@@ -33,7 +33,7 @@ elseif has_config("sdl2") then
     add_requires("libsdl")
 end
 
-if has_config("sdl2_renderer") or has_config("sdl2") then
+if has_config("sdl3_renderer") or has_config("sdl3") then
     add_requires("libsdl3")
 end
 

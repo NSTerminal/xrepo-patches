@@ -6,6 +6,7 @@ package("imgui-with-sdl3")
 
     add_urls("https://github.com/ocornut/imgui/archive/$(version).tar.gz",
              "https://github.com/ocornut/imgui.git")
+    add_versions("v20230605-docking", "8fd0a041355e3cfc6556bbe1e00f262d9a897946")
     add_versions("v1.89.6-docking", "823a1385a269d923d35b82b2f470f3ae1fa8b5a3")
     add_versions("v1.89.6", "e95d1cba1481e66386acda3e7da19cd738da86c6c2a140a48fa55046e5f6e208")
     add_versions("v1.89.5-docking", "0ea3b87bd63ecbf359585b7c235839146e84dedb")
