@@ -45,7 +45,7 @@ if has_config("freetype") then
     add_requires("freetype")
 end
 
-target("imgui")
+target("imgui-with-sdl3")
     set_kind("static")
     add_files("*.cpp", "misc/cpp/*.cpp")
     add_headerfiles("*.h", "(misc/cpp/*.h)")
