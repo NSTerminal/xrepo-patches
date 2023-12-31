@@ -6,7 +6,7 @@ package("imgui-with-sdl3")
 
     add_urls("https://github.com/ocornut/imgui/archive/$(version).tar.gz",
              "https://github.com/ocornut/imgui.git")
-    add_versions("v20230807-docking", "f8704cd085c4347f835c21dc12a3951924143872")
+    add_versions("v20231231-docking", "2523c197bc0c91d5aeb16131b0b0fd300a11bb06")
 
     add_configs("dx9",              {description = "Enable the dx9 backend", default = false, type = "boolean"})
     add_configs("dx10",             {description = "Enable the dx10 backend", default = false, type = "boolean"})
