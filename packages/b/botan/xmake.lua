@@ -36,9 +36,9 @@ package("botan")
             end
         end
 
-        add_headerfiles("build/include/(**.h)")
+        os.cp("build/include/**.h", package:installdir("include"), { rootdir = "build/include" })
     end)
 
     on_test(function (package)
-        assert(package:has_cxxtypes("Botan::TLS::Client", {includes = "botan/tls_client.h"}))
+        assert(package:has_cxxtypes("Botan::TLS::Client", {includes = "botan/tls_client.h", configs = {languages = "c++20"}}))
     end)
