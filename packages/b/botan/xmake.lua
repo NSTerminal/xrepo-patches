@@ -27,7 +27,7 @@ package("botan")
             os.cp("botan-3.lib", libdir)
         else
             os.vrun("python configure.py --build-targets=shared --cc=clang --build-tool=ninja")
-            import("package.tools.make").build(package)
+            import("package.tools.ninja").build(package)
 
             if package:is_plat("macosx") then
                 os.cp("*.dylib", libdir)
