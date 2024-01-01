@@ -36,7 +36,7 @@ package("botan")
             end
         end
 
-        os.cp("build/include/(**.h)", package:installdir("include"))
+        add_headerfiles("build/include/(**.h)")
     end)
 
     on_test(function (package)
