@@ -12,6 +12,7 @@ package("botan")
     end
 
     add_links("botan-3")
+    add_includedirs("include/botan-3")
 
     on_install("windows", "macosx", "linux", function (package)
         local bindir = package:installdir("bin")
@@ -21,24 +22,14 @@ package("botan")
             import("core.tool.toolchain")
             local msvc = toolchain.load("msvc", {plat = "windows", arch = os.arch()})
             local runenvs = msvc:runenvs()
-            os.vrun("python configure.py --build-targets=shared --cc=msvc --build-tool=ninja", { envs = runenvs })
-            import("package.tools.ninja").build(package, {}, { envs = runenvs })
-            os.cp("botan-3.dll", bindir)
-            os.cp("botan-3.lib", libdir)
+            os.vrun("python configure.py --build-targets=shared --cc=msvc --build-tool=ninja --prefix=" .. package:installdir(), { envs = runenvs })
+            import("package.tools.ninja").install(package, {}, { envs = runenvs })
         else
-            os.vrun("python configure.py --build-targets=shared --cc=clang --build-tool=ninja")
-            import("package.tools.ninja").build(package)
-
-            if package:is_plat("macosx") then
-                os.cp("*.dylib", libdir)
-            else
-                os.cp("*.so*", libdir)
-            end
+            os.vrun("python configure.py --build-targets=shared --cc=clang --build-tool=ninja --prefix=" .. package:installdir())
+            import("package.tools.ninja").install(package)
         end
-
-        os.cp("build/include/**.h", package:installdir("include"), { rootdir = "build/include" })
     end)
 
     on_test(function (package)
-        assert(package:has_cxxtypes("Botan::TLS::Client", {includes = "botan/tls_client.h", configs = {languages = "c++20"}}))
+        assert(package:has_cxxtypes("Botan::TLS::Client", { includes = "botan/tls_client.h", configs = { languages = "c++20" } }))
     end)
