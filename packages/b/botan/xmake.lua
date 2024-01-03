@@ -22,10 +22,10 @@ package("botan")
             import("core.tool.toolchain")
             local msvc = toolchain.load("msvc", {plat = "windows", arch = os.arch()})
             local runenvs = msvc:runenvs()
-            os.vrun("python configure.py --build-targets=shared --cc=msvc --build-tool=ninja --prefix=" .. package:installdir(), { envs = runenvs })
+            os.vrun("python configure.py --build-targets=static --cc=msvc --build-tool=ninja --prefix=" .. package:installdir(), { envs = runenvs })
             import("package.tools.ninja").install(package, {}, { envs = runenvs })
         else
-            os.vrun("python configure.py --build-targets=shared --cc=clang --build-tool=ninja --prefix=" .. package:installdir())
+            os.vrun("python configure.py --build-targets=static --cc=clang --build-tool=ninja --prefix=" .. package:installdir())
             import("package.tools.ninja").install(package)
         end
     end)
