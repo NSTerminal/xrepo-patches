@@ -5,7 +5,8 @@ package("botan")
 
     add_urls("https://botan.randombit.net/releases/Botan-$(version).tar.xz")
     add_versions("3.2.0", "049c847835fcf6ef3a9e206b33de05dd38999c325e247482772a5598d9e5ece3")
-    add_deps("python", "ninja")
+    add_deps("python", { kind = "binary" })
+    add_deps("ninja")
 
     if is_plat("macosx") then
         add_frameworks("CoreFoundation", "Security")
