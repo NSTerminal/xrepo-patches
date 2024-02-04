@@ -11,22 +11,8 @@ package("libsdl3")
 
     add_includedirs("include")
 
-    if is_plat("android") then
-        add_configs("sdlmain", {description = "Use SDL_main entry point", default = false, type = "boolean", readonly = true})
-    else
-        add_configs("sdlmain", {description = "Use SDL_main entry point", default = true, type = "boolean"})
-    end
-
     if is_plat("linux") then
         add_configs("x11", {description = "Enables X11 support (requires it on the system)", default = true, type = "boolean"})
-        add_configs("wayland", {description = "Enables Wayland support", default = true, type = "boolean"})
-
-        -- @note deprecated
-        add_configs("with_x", {description = "Enables X support (requires it on the system)", default = true, type = "boolean"})
-    end
-
-    if is_plat("wasm") then
-        add_cxflags("-sUSE_SDL=0")
     end
 
     on_load(function (package)
@@ -41,11 +27,8 @@ package("libsdl3")
             package:add("defines", "SDL_MAIN_HANDLED")
         end
         package:add("components", "lib")
-        if package:is_plat("linux") and (package:config("x11") or package:config("with_x")) then
+        if package:is_plat("linux") and (package:config("x11")) then
             package:add("deps", "libxext", {private = true})
-        end
-        if package:is_plat("linux") and package:config("wayland") then
-            package:add("deps", "wayland", {private = true})
         end
     end)
 
