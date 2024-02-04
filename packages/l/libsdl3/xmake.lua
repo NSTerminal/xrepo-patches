@@ -5,14 +5,23 @@ package("libsdl3")
     set_license("zlib")
 
     add_urls("https://github.com/libsdl-org/SDL.git")
-    add_versions("20231231", "44c2f344d623b65fff1d5dfe9196fae801e82ba2")
+    add_versions("20240204", "5b8e5f8b9f059fb0ade789c13df4caeb1db0a5c2")
 
     add_deps("cmake")
 
-    add_includedirs("include", "include")
+    add_includedirs("include")
 
-    add_configs("use_sdlmain", {description = "Use SDL_main entry point", default = true, type = "boolean"})
+    if is_plat("android") then
+        add_configs("sdlmain", {description = "Use SDL_main entry point", default = false, type = "boolean", readonly = true})
+    else
+        add_configs("sdlmain", {description = "Use SDL_main entry point", default = true, type = "boolean"})
+    end
+
     if is_plat("linux") then
+        add_configs("x11", {description = "Enables X11 support (requires it on the system)", default = true, type = "boolean"})
+        add_configs("wayland", {description = "Enables Wayland support", default = true, type = "boolean"})
+
+        -- @note deprecated
         add_configs("with_x", {description = "Enables X support (requires it on the system)", default = true, type = "boolean"})
     end
 
@@ -21,19 +30,33 @@ package("libsdl3")
     end
 
     on_load(function (package)
-        if package:config("use_sdlmain") then
+        if package:config("sdlmain") then
             package:add("components", "main")
+            if package:is_plat("mingw") then
+                -- MinGW requires linking mingw32 before SDL3main
+                local libsuffix = package:is_debug() and "d" or ""
+                package:add("linkorders", "mingw32", "SDL3main" .. libsuffix)
+            end
+        else
+            package:add("defines", "SDL_MAIN_HANDLED")
         end
         package:add("components", "lib")
-        if package:is_plat("linux") and package:config("with_x") then
+        if package:is_plat("linux") and (package:config("x11") or package:config("with_x")) then
             package:add("deps", "libxext", {private = true})
+        end
+        if package:is_plat("linux") and package:config("wayland") then
+            package:add("deps", "wayland", {private = true})
         end
     end)
 
     on_component("main", function (package, component)
         local libsuffix = package:is_debug() and "d" or ""
-        component:add("links", "SDL2main" .. libsuffix)
-        component:add("defines", "SDL_MAIN_HANDLED")
+        component:add("links", "SDL3main" .. libsuffix)
+        if package:is_plat("windows") then
+            component:add("syslinks", "shell32")
+        elseif package:is_plat("mingw") then
+            component:add("syslinks", "mingw32")
+        end
         component:add("deps", "lib")
     end)
 
@@ -59,7 +82,7 @@ package("libsdl3")
                     component:add("frameworks", "Cocoa", "Carbon", "ForceFeedback", "IOKit")
                 else
                     component:add("frameworks", "CoreBluetooth", "CoreGraphics", "CoreMotion", "OpenGLES", "UIKit")
-		end
+		        end
                 if package:version():ge("2.0.14") then
                     package:add("frameworks", "CoreHaptics", "GameController")
                 end
@@ -70,12 +93,12 @@ package("libsdl3")
     on_fetch("linux", "macosx", "bsd", function (package, opt)
         if opt.system then
             -- use sdl3-config
-            local sdl2conf = try {function() return os.iorunv("sdl3-config", {"--version", "--cflags", "--libs"}) end}
-            if sdl2conf then
-                sdl2conf = os.argv(sdl2conf)
-                local sdl2ver = table.remove(sdl2conf, 1)
-                local result = {version = sdl2ver}
-                for _, flag in ipairs(sdl2conf) do
+            local sdl3conf = try {function() return os.iorunv("sdl3-config", {"--version", "--cflags", "--libs"}) end}
+            if sdl3conf then
+                sdl3conf = os.argv(sdl3conf)
+                local sdl3ver = table.remove(sdl3conf, 1)
+                local result = {version = sdl3ver}
+                for _, flag in ipairs(sdl3conf) do
                     if flag:startswith("-L") and #flag > 2 then
                         -- get linkdirs
                         local linkdir = flag:sub(3)
@@ -104,6 +127,13 @@ package("libsdl3")
                 end
 
                 return result
+            end
+
+            -- finding using sdl3-config didn't work, fallback on pkgconfig
+            if package.find_package then
+                return package:find_package("pkgconfig::sdl3", opt)
+            else
+                return find_package("pkgconfig::sdl3", opt)
             end
         end
     end)
@@ -147,6 +177,11 @@ package("libsdl3")
     end)
 
     on_test(function (package)
-        assert(package:has_cfuncs("SDL_Init",
-            {includes = "SDL3/SDL.h", configs = {defines = "SDL_MAIN_HANDLED"}}))
+        assert(package:check_cxxsnippets({test = [[
+            #include <SDL3/SDL.h>
+            int main(int argc, char** argv) {
+                SDL_Init(0);
+                return 0;
+            }
+        ]]}, {configs = {defines = "SDL_MAIN_HANDLED"}}));
     end)

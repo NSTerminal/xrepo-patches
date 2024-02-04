@@ -6,7 +6,7 @@ package("imgui-with-sdl3")
 
     add_urls("https://github.com/ocornut/imgui/archive/$(version).tar.gz",
              "https://github.com/ocornut/imgui.git")
-    add_versions("v20231231-docking", "2523c197bc0c91d5aeb16131b0b0fd300a11bb06")
+    add_versions("v20240204-docking", "54ef4092a92f777ee6c855b08875e37a4e282b45")
 
     add_configs("dx9",              {description = "Enable the dx9 backend", default = false, type = "boolean"})
     add_configs("dx10",             {description = "Enable the dx10 backend", default = false, type = "boolean"})
@@ -124,5 +124,5 @@ package("imgui-with-sdl3")
                 ImGui::Render();
                 ImGui::DestroyContext();
             }
-        ]]}, {configs = {languages = "c++11"}, includes = {"imgui.h"}}))
+        ]]}, {configs = {languages = "c++14"}, includes = {"imgui.h"}}))
     end)
