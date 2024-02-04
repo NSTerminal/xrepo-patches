@@ -1,5 +1,5 @@
 add_rules("mode.debug", "mode.release")
-set_languages("cxx11")
+set_languages("cxx14")
 
 option("dx9",              {showmenu = true,  default = false})
 option("dx10",             {showmenu = true,  default = false})
