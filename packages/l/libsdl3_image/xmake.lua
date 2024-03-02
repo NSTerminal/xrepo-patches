@@ -3,7 +3,7 @@ package("libsdl3_image")
     set_description("Simple DirectMedia Layer image loading library")
     set_license("zlib")
 
-    add_urls("https://github.com/libsdl-org/SDL_image")
+    add_urls("https://github.com/libsdl-org/SDL_image.git")
     add_versions("20240224", "08fd30bd8eb01fecee59c42e1a74672c6575e38c")
 
     if is_plat("macosx", "iphoneos") then

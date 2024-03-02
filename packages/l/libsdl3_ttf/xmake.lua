@@ -3,7 +3,7 @@ package("libsdl3_ttf")
     set_description("Simple DirectMedia Layer text rendering library")
     set_license("zlib")
 
-    add_urls("https://github.com/libsdl-org/SDL_ttf")
+    add_urls("https://github.com/libsdl-org/SDL_ttf.git")
 
 
     add_versions("20240229", "b8ba042e49dc81768ee34ba92225b742fd19372a")
