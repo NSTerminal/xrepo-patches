@@ -2,7 +2,7 @@ package("libsdl3_mixer")
     set_license("zlib")
 
     add_urls("https://github.com/libsdl-org/SDL_mixer.git")
-    add_versions("20240224", "ef5373696f3a3bfd90e98be0a145196b7118a665")
+    add_versions("20240302", "839be00b59293c52aadbf5ef1028041acb89476b")
 
     add_deps("cmake")
 
