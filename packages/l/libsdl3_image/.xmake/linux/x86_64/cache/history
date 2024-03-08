@@ -1,0 +1,5 @@
+{
+    cmdlines = {
+        "xmake package -f remote --homepage=https://github.com/libsdl-org/SDL_image --url=https://github.com/libsdl-org/SDL_image.git libsdl3_image"
+    }
+}
