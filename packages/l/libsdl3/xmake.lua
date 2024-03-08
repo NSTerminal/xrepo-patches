@@ -15,7 +15,7 @@ package("libsdl3")
         add_configs("x11", {description = "Enables X11 support (requires it on the system)", default = true, type = "boolean"})
     end
 
-    option("use-angle")
+    option("use_angle")
       add_deps("angle")
       add_defines("SDL_VIDEO_STATIC_ANGLE")
 
