@@ -35,7 +35,6 @@ package("libsdl3")
         if package:config("use_angle") then
           package:add("deps", "angle")
           package:add("defines", "SDL_VIDEO_STATIC_ANGLE")
-          package:add("links", "angle")
         end
     end)
 
@@ -78,7 +77,9 @@ package("libsdl3")
                 end
             end
         end
-
+        if package:config("use_angle") then
+          component:add("links", "angle")
+        end
     end)
 
     on_fetch("linux", "macosx", "bsd", function (package, opt)
