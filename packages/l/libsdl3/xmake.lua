@@ -33,8 +33,9 @@ package("libsdl3")
             package:add("deps", "libxext", {private = true})
         end
         if package:config("use_angle") then
-          package:add("defines", "SDL_VIDEO_STATIC_ANGLE")
           package:add("deps", "angle")
+          package:add("defines", "SDL_VIDEO_STATIC_ANGLE")
+          package:add("links", "angle")
         end
     end)
 
@@ -77,6 +78,7 @@ package("libsdl3")
                 end
             end
         end
+
     end)
 
     on_fetch("linux", "macosx", "bsd", function (package, opt)
