@@ -17,6 +17,11 @@ package("libsdl3")
 
     add_configs("use_angle", {default = false, type = "boolean"})
 
+    if config("use_angle") then
+      add_deps("angle")
+      add_links("angle")
+    end
+
     on_load(function (package)
         if package:config("sdlmain") then
             package:add("components", "main")
@@ -32,11 +37,7 @@ package("libsdl3")
         if package:is_plat("linux") and (package:config("x11")) then
             package:add("deps", "libxext", {private = true})
         end
-        if package:config("use_angle") then
-          package:add("deps", "angle")
-          package:add("defines", "SDL_VIDEO_STATIC_ANGLE")
-        end
-    end)
+           end)
 
     on_component("main", function (package, component)
         local libsuffix = package:is_debug() and "d" or ""
@@ -77,10 +78,7 @@ package("libsdl3")
                 end
             end
         end
-        if package:config("use_angle") then
-          component:add("links", "angle")
-        end
-    end)
+            end)
 
     on_fetch("linux", "macosx", "bsd", function (package, opt)
         if opt.system then
@@ -165,6 +163,10 @@ package("libsdl3")
             opt = opt or {}
             opt.cflags = {"-sUSE_SDL=0"}
         end
+        if package:configs("use_angle") then
+          table.insert(opt.cflags, "-DSDL_VIDEO_STATIC_ANGLE")
+        end
+
         import("package.tools.cmake").install(package, configs, opt)
     end)
 
