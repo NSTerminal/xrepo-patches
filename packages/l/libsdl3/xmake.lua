@@ -15,6 +15,8 @@ package("libsdl3")
         add_configs("x11", {description = "Enables X11 support (requires it on the system)", default = true, type = "boolean"})
     end
 
+    add_configs("use_angle", {default = false, type = "boolean"})
+
     on_load(function (package)
         if package:config("sdlmain") then
             package:add("components", "main")
@@ -29,6 +31,10 @@ package("libsdl3")
         package:add("components", "lib")
         if package:is_plat("linux") and (package:config("x11")) then
             package:add("deps", "libxext", {private = true})
+        end
+
+        if package:config("use_angle") then
+          package:add("deps", "angle")
         end
     end)
 
@@ -71,7 +77,7 @@ package("libsdl3")
                 end
             end
         end
-    end)
+            end)
 
     on_fetch("linux", "macosx", "bsd", function (package, opt)
         if opt.system then
@@ -156,6 +162,10 @@ package("libsdl3")
             opt = opt or {}
             opt.cflags = {"-sUSE_SDL=0"}
         end
+        if package:configs("use_angle") then
+          table.insert(opt.cflags, "-DSDL_VIDEO_STATIC_ANGLE")
+        end
+
         import("package.tools.cmake").install(package, configs, opt)
     end)
 
