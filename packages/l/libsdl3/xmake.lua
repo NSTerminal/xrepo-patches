@@ -17,11 +17,6 @@ package("libsdl3")
 
     add_configs("use_angle", {default = false, type = "boolean"})
 
-    if config("use_angle") then
-      add_deps("angle")
-      add_links("angle")
-    end
-
     on_load(function (package)
         if package:config("sdlmain") then
             package:add("components", "main")
@@ -37,7 +32,11 @@ package("libsdl3")
         if package:is_plat("linux") and (package:config("x11")) then
             package:add("deps", "libxext", {private = true})
         end
-           end)
+
+        if package:config("use_angle") then
+          package:add("deps", "angle")
+        end
+    end)
 
     on_component("main", function (package, component)
         local libsuffix = package:is_debug() and "d" or ""
